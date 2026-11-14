@@ -26,6 +26,9 @@ The repository will evolve as new scripts and experiments are added.
 |---|---|---|
 | [Script 1 — First Model Call](script1_first_model_call.ipynb) | Getting started with SLMs | Load a language model, provide a prompt, and generate text. |
 | [Script 2 — Generate a Business Pamphlet](script2_generate_business_pamphlet.ipynb) | A practical SLM application | Transform website content into a professional business pamphlet using a language model. |
+| [Script 3 — Model Reasoning Capability](script3_model_reasoning_capability.ipynb) | Comparing SLMs | Test several small models on the same reasoning puzzle and compare their answers and memory footprints. |
+| [Script 4 — SLM Chatbot UI](script4_slm_chatbot_ui.ipynb) | Interfaces and streaming | Wrap a locally loaded SLM in a Gradio web UI with token-by-token streaming. |
+| [Script 5 — SLM Chatbot: MovieVerse](script5_slm_chatbot_movieverse.ipynb) | A domain-specific chatbot | Build a multi-turn, movie-focused chatbot using a system prompt and conversation history. |
 
 ### Script 1: First Model Call
 
@@ -58,6 +61,62 @@ The workflow combines website content extraction, prompt engineering, and langua
 - Running SLM experiments on consumer GPU hardware.
 
 [➡️ Open Script 2](script2_generate_business_pamphlet.ipynb)
+
+### Script 3: Model Reasoning Capability
+
+How well do different Small Language Models handle the same reasoning task?
+
+This notebook defines a multi-step "bookworm" puzzle and runs it against four instruction-tuned SLMs from different families. A single reusable `model_call` function loads a model, generates an answer, reports its memory footprint, and then frees GPU memory before the next model is loaded.
+
+**Models compared:**
+
+- **Llama 3.2 3B Instruct** (`meta-llama/Llama-3.2-3B-Instruct`)
+- **Qwen 2.5 3B Instruct** (`Qwen/Qwen2.5-3B-Instruct`)
+- **Phi-4 Mini Instruct** (`microsoft/Phi-4-mini-instruct`)
+- **Gemma 3 1B IT** (`google/gemma-3-1b-it`)
+
+**Key concepts:**
+
+- Detecting and using a GPU (CUDA), with a CPU fallback.
+- Authenticating with Hugging Face using an `HF_TOKEN` from a `.env` file.
+- Loading models in `float16` and checking their memory footprint.
+- Applying a model's chat template to build inputs.
+- Clearing models from GPU memory so several can be tested on limited VRAM.
+- Comparing reasoning quality across model families and sizes.
+
+[➡️ Open Script 3](script3_model_reasoning_capability.ipynb)
+
+### Script 4: SLM Chatbot UI
+
+From notebook cells to a working chat interface.
+
+This notebook loads **Llama 3.2 3B Instruct** once and serves it through a simple **Gradio** web app. Responses are streamed token by token, so text appears as the model generates it instead of all at once.
+
+**Key concepts:**
+
+- Using a system message to set the assistant's behavior (responding in Markdown).
+- Streaming generation with `TextIteratorStreamer`.
+- Running `model.generate` in a background thread so the UI stays responsive.
+- Building a UI with `gr.Interface` (input textbox, Markdown output).
+- Releasing GPU memory when you're finished.
+
+[➡️ Open Script 4](script4_slm_chatbot_ui.ipynb)
+
+### Script 5: SLM Chatbot — MovieVerse
+
+Turning a general-purpose SLM into a focused, conversational assistant.
+
+This notebook builds **MovieVerse**, a movie-focused chatbot powered by **Llama 3.2 3B Instruct**. A detailed system prompt gives it a cinema-expert persona covering Hollywood, Bollywood, regional Indian cinema, Korean, Japanese, Chinese, and European films, and more. Unlike Script 4, it keeps **conversation history**, so follow-up questions work naturally.
+
+**Key concepts:**
+
+- Writing a persona-driven system prompt for a specific domain.
+- Passing chat history to the model on every turn.
+- Normalizing Gradio's message formats before applying the chat template.
+- Building a multi-turn chat UI with `gr.ChatInterface` and a custom theme.
+- Streaming responses while keeping the interface responsive.
+
+[➡️ Open Script 5](script5_slm_chatbot_movieverse.ipynb)
 
 ## 🛠️ Technology Stack
 

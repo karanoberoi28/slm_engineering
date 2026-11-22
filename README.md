@@ -29,6 +29,8 @@ The repository will evolve as new scripts and experiments are added.
 | [Script 3 — Model Reasoning Capability](script3_model_reasoning_capability.ipynb) | Comparing SLMs | Test several small models on the same reasoning puzzle and compare their answers and memory footprints. |
 | [Script 4 — SLM Chatbot UI](script4_slm_chatbot_ui.ipynb) | Interfaces and streaming | Wrap a locally loaded SLM in a Gradio web UI with token-by-token streaming. |
 | [Script 5 — SLM Chatbot: MovieVerse](script5_slm_chatbot_movieverse.ipynb) | A domain-specific chatbot | Build a multi-turn, movie-focused chatbot using a system prompt and conversation history. |
+| [Script 6 — SLM Hotel Assistant](script6_slm_hotel_assistant.ipynb) | Tool calling | Let an SLM look up hotel prices from a SQLite database through tool calls. |
+| [Script 7 — SLM Code Generation](script7_slm_code_generation.ipynb) | Code generation | Port Python code to Fortran with different SLMs and compile the results. |
 
 ### Script 1: First Model Call
 
@@ -118,6 +120,18 @@ This notebook builds **MovieVerse**, a movie-focused chatbot powered by **Llama 
 
 [➡️ Open Script 5](script5_slm_chatbot_movieverse.ipynb)
 
+### Script 6: SLM Hotel Assistant
+
+Builds **HotelAI**, a Gradio chatbot where Llama 3.2 3B calls a `get_hotel_price` tool to fetch prices from a SQLite database (`prices.db`). The notebook parses the model's tool calls and feeds the results back.
+
+[➡️ Open Script 6](script6_slm_hotel_assistant.ipynb)
+
+### Script 7: SLM Code Generation
+
+Uses Llama 3.2 3B, Qwen 2.5 3B, and Phi-4 Mini to port a Python factorial program to Fortran, then compiles each result with `gfortran`. The generated files are saved as `fact_meta.f90`, `fact_Qwen.f90`, and `fact_micr.f90`. Requires `gfortran` to be installed.
+
+[➡️ Open Script 7](script7_slm_code_generation.ipynb)
+
 ## 🛠️ Technology Stack
 
 The notebooks explore tools and technologies from the Python and open-source AI ecosystem.
@@ -128,9 +142,14 @@ The notebooks explore tools and technologies from the Python and open-source AI 
 | Jupyter Notebook | Interactive experimentation and documentation |
 | PyTorch | Deep learning and model execution |
 | Hugging Face Transformers | Loading and using language models |
-| Llama 3.2 3B Instruct | Instruction-tuned language model used in Script 2 |
+| Llama 3.2 3B Instruct | Instruction-tuned model used across Scripts 2–7 |
+| Qwen 2.5, Phi-4 Mini, Gemma 3 | Additional SLMs compared in Scripts 3 and 7 |
 | Model quantization | Reducing model memory requirements |
 | Website extraction tools | Collecting content for downstream text generation |
+| Gradio | Chat interfaces for local models (Scripts 4–6) |
+| SQLite | Hotel price database used for tool calling (Script 6) |
+| python-dotenv | Loading the Hugging Face token from a `.env` file |
+| gfortran | Compiling SLM-generated Fortran code (Script 7) |
 
 The specific dependencies may vary by notebook.
 
@@ -150,7 +169,8 @@ For larger models, quantization and memory-efficient inference can help reduce r
 - Jupyter Notebook or JupyterLab.
 - An NVIDIA GPU for GPU-accelerated experiments, where supported.
 - Basic familiarity with Python and machine learning concepts.
-- A Hugging Face account and appropriate model access, if required by the selected model.
+- A Hugging Face account, an access token, and approved access to gated models (for example, Llama 3.2 and Gemma 3).
+- `gfortran`, for Script 7.
 
 ## 🚀 Getting Started
 
@@ -189,14 +209,24 @@ source .venv/bin/activate
 Install PyTorch and the libraries required by the notebook you want to run. For example:
 
 ```bash
-pip install torch transformers accelerate jupyter
+pip install torch transformers accelerate jupyter huggingface_hub python-dotenv gradio openai
 ```
 
 Additional packages may be required for website extraction and 4-bit quantization. Check the imports and setup instructions in the relevant notebook before installing them.
 
 For GPU acceleration, install a PyTorch build compatible with your NVIDIA driver and CUDA environment. Quantization libraries may have additional operating-system and hardware requirements.
 
-### 5. Launch Jupyter Notebook
+### 5. Add your Hugging Face token
+
+Scripts 3–7 read your token from the `HF_TOKEN` environment variable. Create a `.env` file in the project root:
+
+```
+HF_TOKEN=your_hugging_face_token
+```
+
+Keep this file private and never commit it to version control.
+
+### 6. Launch Jupyter Notebook
 
 ```bash
 jupyter notebook
@@ -206,6 +236,11 @@ Open the notebook you want to explore:
 
 - `script1_first_model_call.ipynb`
 - `script2_generate_business_pamphlet.ipynb`
+- `script3_model_reasoning_capability.ipynb`
+- `script4_slm_chatbot_ui.ipynb`
+- `script5_slm_chatbot_movieverse.ipynb`
+- `script6_slm_hotel_assistant.ipynb`
+- `script7_slm_code_generation.ipynb`
 
 Run the cells sequentially and review the explanations, outputs, and experiments.
 
